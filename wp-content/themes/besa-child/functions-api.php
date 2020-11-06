@@ -122,6 +122,42 @@ add_action('rest_api_init', function () {
   ]);
 });
 
+add_filter( 'authenticate', 'custom_authenticate_username_password', 30, 3 );
+/**
+ * Remove Wordpress filer and write our own with changed error text.
+ */
+function custom_authenticate_username_password( $user, $username, $password ) {
+    if (is_a($user, 'WP_User')){
+        return $user;
+    }
+    
+    if (empty($username) || empty($password)) {
+        $error = new WP_Error();
+        if (empty($username )){
+            $error->add('empty_email', __('The username or email field is empty.'));
+        }
+
+        if (empty($password)){
+            $error->add('empty_password', __( 'The password field is empty' ));
+        }
+        return $error;
+    }
+
+    $user = get_user_by( 'login', $username );
+    if (!$user){
+        return new WP_Error( 'invalid_username', sprintf( __( 'Invalid username or email address.' ), wp_lostpassword_url()));
+    }
+    $user = apply_filters( 'wp_authenticate_user', $user, $password );
+    if (is_wp_error($user)){
+        return $user;
+    }
+    if (!wp_check_password( $password, $user->user_pass, $user->ID )){
+        return new WP_Error( 'incorrect_password', sprintf( __( 'The password you\'ve entered is incorrect.' ),
+        $username, wp_lostpassword_url() ) );
+    }
+    return $user;
+}
+
 function api_getproducts()
 {
   setupWooCommerce();

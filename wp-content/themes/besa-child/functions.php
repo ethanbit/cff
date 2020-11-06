@@ -274,3 +274,8 @@ function besa_tbay_autocomplete_suggestions()
 
   die();
 }
+
+add_filter('yith_wcwl_remove_from_wishlist_label', 'd_yith_wcwl_remove_from_wishlist_label', 500,1);
+function d_yith_wcwl_remove_from_wishlist_label(){
+  return '';
+}

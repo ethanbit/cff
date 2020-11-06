@@ -20,10 +20,6 @@ Text Domain: besa-child
  * @compatible    WooCommerce 3.4.7
  */
 
- .duc {
-
- }
-
 #ocwma_billing_popup select,
 #ocwma_shipping_popup select {
   background: none;
@@ -56,4 +52,9 @@ Text Domain: besa-child
 
 table.ui-datepicker-calendar {
   margin-bottom: 0;
+}
+
+.yith-wcwl-add-button span.separator,
+.yith-wcwl-add-button a.view-wishlist {
+  display: none;
 }

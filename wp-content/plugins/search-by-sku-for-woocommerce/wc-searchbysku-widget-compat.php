@@ -3,8 +3,8 @@
 /**
  * A drop in replacement of WC_Admin_Post_Types::product_search()
  */
-add_filter('posts_search', 'product_search_sku', 600, 1);
-function product_search_sku($where)
+add_filter('posts_search', 'product_search_sku', 600, 2);
+function product_search_sku($search, $wp_query)
 {
     global $pagenow, $wpdb, $wp;
 
@@ -15,7 +15,7 @@ function product_search_sku($where)
         || (isset($wp->query_vars['post_type']) && 'product' != $wp->query_vars['post_type'])
         || (isset($wp->query_vars['post_type']) && is_array($wp->query_vars['post_type']) && !in_array('product', $wp->query_vars['post_type']))
     ) {
-        return $where;
+        return $search;
     }
     $search_ids = array();
     $terms = explode(',', $wp->query_vars['s']);
@@ -38,9 +38,11 @@ function product_search_sku($where)
 
     $search_ids = array_unique(array_filter(array_map('absint', $search_ids)));
 
-    if (sizeof($search_ids) > 0) {
-        $where = str_replace('))', ") OR ({$wpdb->posts}.ID IN (" . implode(',', $search_ids) . ")))", $where);
+    if (count($search_ids) > 0) {
+        //$search = str_replace('))', ") OR ({$wpdb->posts}.ID IN (" . implode(',', $search_ids) . ")))", $search);
+
+        $search .= " OR {$wpdb->posts}.ID IN (".implode(',', $search_ids).")";
     }
     remove_filters_for_anonymous_class('posts_search', 'WC_Admin_Post_Types', 'product_search', 10);
-    return $where;
+    return $search;
 }

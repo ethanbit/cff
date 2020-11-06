@@ -274,9 +274,3 @@ function besa_tbay_autocomplete_suggestions()
 
   die();
 }
-
-// add_filter( 'posts_search', 'search_by_id_only', 500, 2 );
-// function search_by_id_only($search, $wp_query){
-//   echo "<!-- Ducnb <pre>"; print_r($search); echo "</pre>".__FILE__.": ".__LINE__."-->";
-//   return;
-// }

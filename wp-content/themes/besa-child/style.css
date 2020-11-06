@@ -20,6 +20,10 @@ Text Domain: besa-child
  * @compatible    WooCommerce 3.4.7
  */
 
+ .duc {
+
+ }
+
 #ocwma_billing_popup select,
 #ocwma_shipping_popup select {
   background: none;

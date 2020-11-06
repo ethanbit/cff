@@ -58,3 +58,7 @@ table.ui-datepicker-calendar {
 .yith-wcwl-add-button a.view-wishlist {
   display: none;
 }
+
+#tbay-header .tbay-login {
+  z-index: 99999;
+}

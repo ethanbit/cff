@@ -150,7 +150,7 @@ function api_register(WP_REST_Request $request)
     $msg = 'Register success.';
   } else {
     $error = 1;
-    $msg = 'Register unsuccess, pls try again.';
+    $msg = 'Registration unsuccessful. Please try again.';
   }
 
   echo json_encode(['error' => $error, 'msg' => $msg]);

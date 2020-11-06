@@ -1,0 +1,12 @@
+/*
+ * @package   solo
+ * @copyright Copyright (c)2014-2020 Nicholas K. Dionysopoulos / Akeeba Ltd
+ * @license   GNU General Public License version 3, or later
+ */
+
+/* Simple CSS file that will be loaded ust to render the Akeeba Backup icon in the left navigation column */
+.icon-AdminAkeeba {
+    background: transparent url('../logo/abps-14-white.png') no-repeat 0 0;
+    height: 14px;
+    width: 18px;
+}

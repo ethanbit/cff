@@ -1,0 +1,164 @@
+/*!
+ * @package   solo
+ * @copyright Copyright (c)2014-2020 Nicholas K. Dionysopoulos / Akeeba Ltd
+ * @license   GNU General Public License version 3, or later
+ */
+
+@use "sass:color";
+
+/**
+ * Filesystem filters
+ */
+
+#ak_crumbs_container {
+  padding: 6px 0 2px 0;
+}
+
+#ak_crumbs {
+  display: inline;
+  color: $grey;
+
+  span {
+    padding: 1px 3px;
+    cursor: pointer;
+  }
+}
+
+#folders, #files {
+  height: 300px;
+  overflow-y: auto;
+}
+
+.folder-container {
+  background-color: $white;
+  height: 2em;
+  padding: 1px;
+  color: $grey;
+  font-weight: normal;
+  border-bottom: 1px solid lighten($teal, 10%);
+
+  span.folder-padding {
+    float: left;
+    cursor: pointer;
+    border: none;
+    margin-right: 4px;
+    width: 16px;
+    height: 16px;
+    display: block;
+  }
+
+  span.folder-up {
+    span.ui-icon {
+      float: left;
+    }
+  }
+
+  span.folder-icon-container {
+    float: left;
+    /*cursor: pointer; */
+    border: none;
+    margin-right: 4px;
+  }
+
+  span.folder-name {
+    padding-left: 4px;
+    cursor: pointer;
+
+    &:hover {
+      font-weight: bold;
+      color: $red;
+    }
+  }
+
+  .btn-danger {
+    cursor: not-allowed !important;
+  }
+}
+
+.file-container {
+  background-color: $white;
+  height: 2em;
+  padding: 1px;
+  color: $grey;
+  font-weight: normal;
+  border-bottom: 1px solid lighten($teal, 10%);
+
+  span.file-icon-container {
+    float: left;
+    /*cursor: pointer;*/
+    border: none;
+    margin-right: 4px;
+  }
+
+  span.file-name {
+    padding-left: 4px;
+  }
+
+  span.file-clickable {
+    cursor: pointer;
+
+    &:hover {
+      font-weight: bold;
+      color: $red;
+    }
+  }
+
+  span.file-size {
+    display: block;
+    float: right;
+  }
+
+  .btn-danger {
+    cursor: not-allowed !important;
+  }
+}
+
+
+.file-header {
+  margin: 10px 0;
+
+  &.file-container {
+    span.file-name {
+      font-style: italic;
+      padding-left: 20px
+    }
+  }
+}
+
+.folder-header {
+  margin: 10px 0;
+
+  &.folder-container {
+    span.folder-name {
+      font-style: italic;
+      padding-left: 20px;
+
+      &:hover {
+        color: $grey;
+        font-weight: normal;
+        cursor: default;
+      }
+    }
+  }
+}
+
+
+#ak_list_container {
+  padding: 4px;
+}
+
+.ak_filter_type {
+  font-weight: bold;
+}
+
+.ak_filter_row {
+  .ak_filter_tab_icon_container {
+    float: left;
+    /*cursor: pointer;*/
+    margin-right: 4px;
+  }
+}
+
+#addnewfilter {
+  padding: 0.6em 0;
+}

@@ -1,0 +1,42 @@
+
+img.OCWMA_rating_div {
+    width: 105px;
+    vertical-align: middle;
+}
+.ocwma_cover_div {
+border: 1px solid #ccc;
+margin-bottom: 10px;
+padding: 16px;
+}
+
+table.ocwma_data_table {
+display: inline-block;
+padding: 0px 10px;
+}
+.ocwma_data_table tr th, .ocwma_data_table tr td{
+text-align: left;
+width: auto;
+}
+.ocwma_data_table tr{
+line-height: 51px;
+}
+.ocwma_data_table tr th{
+min-width: 250px;
+}
+.ocwma_data_table select,.ocwma_data_table input[type="number"]{
+width: 30%;
+}
+.ocwma_data_table strong {
+vertical-align: middle;
+}
+.ocwma_cover_div tr {
+    line-height: 51px;
+}
+.ocwma_data_table input[type="color"]{
+	width:52%;
+}
+.ocwma_pro_link {
+    font-size: 16px;
+    font-weight: bold;
+    margin-left: 10px;
+}

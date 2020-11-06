@@ -1,0 +1,78 @@
+/*!
+ * @package   solo
+ * @copyright Copyright (c)2014-2020 Nicholas K. Dionysopoulos / Akeeba Ltd
+ * @license   GNU General Public License version 3, or later
+ */
+
+#DialogBody
+{
+  // Fix changelog scrolling in modal window
+  overflow: scroll;
+
+  h3.akeeba-changelog {
+    border-bottom: 2px solid #333;
+    margin-top: 10pt;
+    font-size: 13pt;
+  }
+
+}
+
+ul.akeeba-changelog {
+  list-style-type: none;
+  padding: 7px;
+  margin: 3px;
+  font-size: 10pt;
+  border: thin solid $light-grey;
+  background-color: $white;
+  border-radius: 5px;
+
+  li {
+    line-height: 16px;
+    padding: 0;
+    margin: 0 3px 3px;
+
+    span {
+      display: inline-block;
+      height: 16px;
+      width: 32px;
+      background: transparent url(../image/changelog.png) top left no-repeat;
+      margin-right: 4px;
+    }
+
+    &.akeeba-changelog-added {
+      color: $green;
+    }
+
+    &.akeeba-changelog-removed {
+      color: $red;
+
+      span {
+        background-position: 0 -16px;
+      }
+    }
+
+    &.akeeba-changelog-changed {
+      color: $grey;
+
+      span {
+        background-position: 0 -32px;
+      }
+    }
+
+    &.akeeba-changelog-important {
+      color: $orange;
+
+      span {
+        background-position: 0 -64px;
+      }
+    }
+
+    &.akeeba-changelog-fixed {
+      color: $teal;
+
+      span {
+        background-position: 0 -48px;
+      }
+    }
+  }
+}

@@ -1,0 +1,14 @@
+installation__
+wp-admin
+wp-includes
+wp-content/uploads
+wp-content/upgrade
+wp-content/wphb-logs
+wp-content/wflogs/*
+wp-content/plugins/airplane-mode-master/*
+wp-config.php
+.htaccess
+debug.log
+*.zip
+*.jpg
+*.png

@@ -1,0 +1,33 @@
+#the-list td p {
+  margin-bottom: 0;
+}
+th#device_id {
+  text-align: left;
+  width: 430px;
+  overflow: hidden;
+}
+th#action {
+  text-align: left;
+  width: 150px;
+  overflow: hidden;
+}
+th#status {
+  text-align: left;
+  width: 90px;
+  overflow: hidden;
+}
+th#device_os {
+  text-align: left;
+  width: 90px;
+  overflow: hidden;
+}
+
+td.device_id strong {
+  display: block;
+  overflow: hidden;
+  width: 400px;
+}
+td.device_id strong span {
+  display: block;
+  width: 5000px;
+}

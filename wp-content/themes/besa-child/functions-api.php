@@ -3,6 +3,9 @@
  * Mobile API
  */
 include_once ABSPATH . 'wp-admin/includes/plugin.php';
+include_once ABSPATH . 'wp-content/plugins/jwt-authentication-for-wp-rest-api/includes/class-jwt-auth.php';
+include_once ABSPATH . 'wp-content/plugins/jwt-authentication-for-wp-rest-api/public/class-jwt-auth-public.php';
+
 add_action('rest_api_init', function () {
   register_rest_route('func', '/register', [
     'methods' => 'POST',
@@ -120,7 +123,42 @@ add_action('rest_api_init', function () {
     'methods' => 'POST',
     'callback' => 'api_updateuser',
   ]);
+
+  // update userdetail
+  register_rest_route('func', '/login2', [
+    'methods' => 'POST',
+    'callback' => 'api_login2',
+  ]);
 });
+
+function api_login2($request){
+  $username = $request['username'];
+  $password = $request['password'];
+
+  $init = new Jwt_Auth();  
+  $JAP = new Jwt_Auth_Public('jwt-auth', '1.1.0');
+  $token = $JAP->generate_token($request);
+  $data['user'] = $token;
+
+  // insert device ID
+  $userID = $token['user_id'];
+  api_insertdevice_2($request, $userID);
+
+  $wishlish = api_getwishlist_2($userID);
+  $data['wishlish'] = $wishlish;
+
+  echo json_encode(['error' => 0, 'msg' => '', 'data' => $data]);
+  exit();
+}
+
+add_filter( 'jwt_auth_token_before_dispatch', 'add_moreinfo_to_token', 30, 2 );
+function add_moreinfo_to_token($data, $user){
+  $data['user_id'] = $user->data->ID;
+  $billingAndShipping = api_userdetail_2($user->data->ID);
+  $userData = array_merge($data, $billingAndShipping);
+  return $userData;
+}
+
 
 add_filter( 'authenticate', 'custom_authenticate_username_password', 30, 3 );
 /**
@@ -241,6 +279,38 @@ function api_getwishlist(WP_REST_Request $request)
     }
   }
   return wp_send_json(['error' => $err, 'msg' => $msg, 'data' => $data], 200);
+}
+
+function api_getwishlist_2($userID)
+{
+  global $wpdb;
+  $currentUserId_fromjwt = $userID;
+
+  $msg = '';
+  $err = 0;
+
+  $query =
+    "SELECT prod_id, quantity FROM {$wpdb->prefix}yith_wcwl WHERE user_id = " .
+    $currentUserId_fromjwt;
+  $results = $wpdb->get_results($wpdb->prepare($query));
+
+  $data = [];
+  foreach ($results as $result) {
+    $product = wc_get_product($result->prod_id);
+    if (is_object($product)) {
+      $featured_img_url = get_the_post_thumbnail_url($product->get_image_id());
+      $arr = [
+        'id' => $product->get_id(),
+        'name' => $product->get_title(),
+        'slug' => $product->get_slug(),
+        'status' => $product->get_status(),
+        'sku' => $product->get_sku(),
+        'src' => $featured_img_url,
+      ];
+      $data[] = $arr;
+    }
+  }
+  return $data;
 }
 
 function api_addwishlist(WP_REST_Request $request)
@@ -643,6 +713,80 @@ function api_userdetail()
   $data['data'] = $detail;
 
   wp_send_json($data, 200);
+  exit();
+}
+
+function api_userdetail_2($userID)
+{
+  global $wpdb;
+  $currentuserid_fromjwt = $userID;
+
+  if (!$userID) {
+    wp_send_json(
+      ['msg' => 'Please login first', 'err' => 1, 'data' => ''],
+      200
+    );
+  }
+
+  $customer = new WC_Customer($currentuserid_fromjwt);
+  $data = [];
+  $data['msg'] = '';
+  $data['err'] = '0';
+  $data['data'] = '';
+
+  $user = get_user_by('ID', $currentuserid_fromjwt);
+
+  //$detail['id'] = $user->ID;
+  //$detail['display_name'] = $user->data->display_name;
+  //$detail['user_email'] = $user->data->user_email;
+
+  $wooShipping = $customer->shipping;
+  $wooShipping['id'] = 0;
+
+  $wooBilling = $customer->billing;
+  $wooBilling['id'] = 0;
+
+  $shippingArr[] = $wooShipping;
+  $shippingList = $wpdb->get_results("
+    SELECT id, userdata 
+    FROM {$wpdb->prefix}ocwma_billingadress
+    WHERE userid = $currentuserid_fromjwt AND type = 'shipping'
+  ");
+  foreach ($shippingList as $s) {
+    $shippingData = unserialize($s->userdata);
+    $shippingData['id'] = intval($s->id);
+
+    $newShippingData = [];
+    foreach ($shippingData as $k => $shipping) {
+      $newKey = str_replace('shipping_', '', $k);
+      $newShippingData[$newKey] = $shipping;
+    }
+
+    $shippingArr[] = $newShippingData;
+  }
+
+  $billingArr[] = $wooBilling;
+  $billingList = $wpdb->get_results("
+    SELECT id, userdata 
+    FROM {$wpdb->prefix}ocwma_billingadress
+    WHERE userid = $currentuserid_fromjwt AND type = 'billing'
+  ");
+  foreach ($billingList as $s) {
+    $billingData = unserialize($s->userdata);
+    $billingData['id'] = intval($s->id);
+    $newBillingData = [];
+    foreach ($billingData as $k => $billing) {
+      $newKey = str_replace('billing_', '', $k);
+      $newBillingData[$newKey] = $billing;
+    }
+
+    $billingArr[] = $newBillingData;
+  }
+
+  $detail['billing'] = $billingArr;
+  $detail['shipping'] = $shippingArr;
+
+  return $detail;
   exit();
 }
 
@@ -1307,7 +1451,7 @@ function api_insertdevice($request)
       'device_id' => $device_id,
       'user_id' => $currentuserid_fromjwt,
       'device_type' => $device_type,
-      'device_os' => $device_os == 0 ? 'ios' : 'android',
+      'device_os' => $device_type == 0 ? 'ios' : 'android',
       'is_notify' => 1,
       'update_date' => strtotime('now'),
       'register_date' => strtotime('now'),
@@ -1323,6 +1467,43 @@ function api_insertdevice($request)
     ],
     200
   );
+}
+
+function api_insertdevice_2($request, $userID)
+{
+  $device_id = $request['device_id'];
+  $device_type = $request['device_type'];
+  $currentuserid_fromjwt = $userID;
+  if (!$currentuserid_fromjwt or $device_id == '') {
+    wp_send_json(
+      [
+        'msg' => 'You need login and give us Device ID',
+        'err' => 1,
+        'data' => '',
+      ],
+      200
+    );
+  }
+
+  global $wpdb;
+  $sql = "SELECT COUNT(*) FROM {$wpdb->prefix}notifications_devices WHERE device_id = '$device_id'";
+  $checkDeviceToken = $wpdb->get_var($sql);
+  $msg = 'This device ready in DB';
+  if (!$checkDeviceToken) {
+    //echo "<p>User count is {$checkDeviceToken}</p>";
+    $wpdb->insert($wpdb->prefix . 'notifications_devices', [
+      'device_id' => $device_id,
+      'user_id' => $currentuserid_fromjwt,
+      'device_type' => $device_type,
+      'device_os' => $device_type == 0 ? 'ios' : 'android',
+      'is_notify' => 1,
+      'update_date' => strtotime('now'),
+      'register_date' => strtotime('now'),
+    ]);
+    $msg = 'Added device to DB';
+  }
+  return true;
+  exit;
 }
 
 function api_updateuser($request)

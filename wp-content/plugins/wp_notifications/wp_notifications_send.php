@@ -152,7 +152,7 @@ class WpNotificationsSend
   {
     $history = new WpNotificationsHistory();
     $FIREBASE_API_KEY =
-      'AAAAt6A7OZw:APA91bHDs6Kz4Uo8Bbe_LE_TRqdPIhxVD-fhcbW2vZeo8xbeCJ5iGYZbIVpF0xArPM4cNKhvxi1ANWzV3kaVo-mWq04p6XTRdx79uROW9R57iEKHxbKmvAxPl1F3lHfW_peQjajRDu81';
+      'AAAA6sCa7l8:APA91bEuWdYyeyD-GwxcDxvnr5VvvjEXYgChKRT-Q7HCRU_F-3wghqO_vyAP39etK0gQU-57G9GsJHCh-OgXpEfixt9H1wykzepmjxrk4-1Pfw91CqxFaEnudMsExB28nanEc8aM9Viu';
 
     ob_start();
     $sendData = [

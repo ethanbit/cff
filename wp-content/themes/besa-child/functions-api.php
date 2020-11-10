@@ -137,7 +137,17 @@ function api_login2($request){
 
   $init = new Jwt_Auth();  
   $JAP = new Jwt_Auth_Public('jwt-auth', '1.1.0');
-  $token = $JAP->generate_token($request);
+  // run filter first "jwt_auth_token_before_dispatch"
+  $token = $JAP->generate_token($request); 
+  if(is_wp_error($token)){
+    $errDatas = $token->errors;
+    $msg = '';
+    foreach($errDatas as $k => $errData){
+      $msg = $errData[0];
+    }
+    return wp_send_json(['error' => 1, 'msg' => $msg, 'data' => ''], 200);
+  }
+  
   $data['user'] = $token;
 
   // insert device ID
@@ -147,7 +157,7 @@ function api_login2($request){
   $wishlish = api_getwishlist_2($userID);
   $data['wishlish'] = $wishlish;
 
-  echo json_encode(['error' => 0, 'msg' => '', 'data' => $data]);
+  return wp_send_json(['error' => 0, 'msg' => '', 'data' => $data], 200);
   exit();
 }
 

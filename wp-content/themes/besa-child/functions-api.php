@@ -946,8 +946,8 @@ function api_getproductcategory()
   }
 
   $WOO_API_URL =
-    // get_home_url() .
-    'https://test.cityfinefoods.com.au' .
+    get_home_url() .
+    //'https://test.cityfinefoods.com.au' .
     '/wp-json/wc/v3/products?consumer_key=' .
     WOO_CONSUMER_KEY .
     '&consumer_secret=' .

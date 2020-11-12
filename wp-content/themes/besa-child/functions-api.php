@@ -124,7 +124,12 @@ add_action('rest_api_init', function () {
     'callback' => 'api_updateuser',
   ]);
 
-  // update userdetail
+  // check DB if product or category have any change
+  register_rest_route('func', '/checkupdate', [
+    'methods' => 'POST',
+    'callback' => 'api_checkupdate',
+  ]);
+
   register_rest_route('func', '/login2', [
     'methods' => 'POST',
     'callback' => 'api_login2',
@@ -1549,4 +1554,79 @@ function api_updateuser($request)
     ],
     200
   );
+}
+
+function api_checkupdate($request){
+  $currentuserid_fromjwt = get_current_user_id();
+  $checkTimeFrom = $request['checktimefrom'];
+  if(!$currentuserid_fromjwt OR !$checkTimeFrom OR !is_numeric($checkTimeFrom)){
+    wp_send_json(
+      [
+        'msg' => 'Please give me params: checktimefrom and must have type number',
+        'err' => 1,
+        'data' => '',
+      ],
+      200
+    );
+  }
+
+  global $wpdb;
+  $sql = "SELECT action, type, object_id FROM {$wpdb->prefix}notifications_woo_change WHERE timestamp >= $checkTimeFrom ";
+  $results = $wpdb->get_results($sql);
+  $resData = array();
+  $resData['haschange'] = 0;
+  $resData['data'] = array();
+  foreach($results as $result){
+    if($result->action == 'delete' OR $result->action == 'trash'){
+      $arr = [
+        'id' => $result->object_id,
+      ];
+    }else{
+      if($result->type == 'product'){
+        $product   = wc_get_product( $result->object_id );
+        if(is_object($product)){
+          $featured_img_url = get_the_post_thumbnail_url($product->get_image_id());
+          $status = $product->get_status();
+          if($status == 'publish'){
+            $arr = [
+              'id' => $product->get_id(),
+              'name' => $product->get_title(),
+              'slug' => $product->get_slug(),
+              'status' => $product->get_status(),
+              'sku' => $product->get_sku(),
+              'src' => $featured_img_url ? $featured_img_url : '',
+            ];
+          }
+        }
+      }elseif($result->type == 'category'){
+        $term = get_term($result->object_id, 'product_cat');
+        if(is_object($term)){
+          $thumb_id = get_woocommerce_term_meta( $term->term_id, 'thumbnail_id', true );
+          $featured_img_url = wp_get_attachment_url(  $thumb_id );
+          $arr = [
+            'id' => $term->term_id,
+            'name' => $term->name,
+            'slug' => $term->slug,
+            'src' => $featured_img_url ? $featured_img_url : '',
+          ];
+        }
+      }
+    }
+
+    if(!empty($arr)){
+      $data['action'] = $result->action;
+      $data['type'] = $result->type;
+      $data['data'] = $arr;
+      $resData['data'][] = $data;
+    }
+
+  }
+  if(!empty($resData['data'])){
+    $resData['haschange'] = 1;
+  }
+
+  //echo "<pre>"; print_r($resData); echo "</pre>".__FILE__.": ".__LINE__."";
+
+  wp_send_json( $resData, 200 );
+  return true;
 }

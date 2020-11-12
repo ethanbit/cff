@@ -13,6 +13,7 @@ require_once $base_dir . '/inc/class_wp_notifications_data.php';
 require_once $base_dir . '/wp_notifications_send.php';
 require_once $base_dir . '/wp_notifications_groups.php';
 require_once $base_dir . '/wp_notifications_history.php';
+require_once $base_dir . '/wp_notifications_woo_changed.php';
 define('WP_NOTIFICATIONS_URL', plugin_dir_url(__FILE__));
 
 class WpNotifications_Plugin

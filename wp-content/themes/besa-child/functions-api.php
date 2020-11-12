@@ -1603,12 +1603,56 @@ function api_checkupdate($request){
         if(is_object($term)){
           $thumb_id = get_woocommerce_term_meta( $term->term_id, 'thumbnail_id', true );
           $featured_img_url = wp_get_attachment_url(  $thumb_id );
-          $arr = [
+          $cat_arr = [
             'id' => $term->term_id,
             'name' => $term->name,
             'slug' => $term->slug,
             'src' => $featured_img_url ? $featured_img_url : '',
           ];
+          if($result->action == 'addnew'){
+            $arr['cat_info'] = $cat_arr;
+            $arr['products'] = array();
+
+            $queryArgs = array(
+              'post_type'             => 'product',
+              'post_status'           => 'publish',
+              'posts_per_page'        => -1,
+              'tax_query'             => array(
+                array(
+                  'taxonomy'      => 'product_cat',
+                  'field'         => 'term_id', //This is optional, as it defaults to 'term_id'
+                  'terms'         => $term->term_id
+                )
+              )
+            );
+            $query = new WP_Query($queryArgs);
+            $products = [];
+            foreach($query->posts as $p){
+              $featured_img_url = get_the_post_thumbnail_url($p->ID);
+              $products[] = [
+                'id' => $p->ID,
+                'name' => $p->post_title,
+                'slug' => $p->post_name,
+                'src' => $featured_img_url ? $featured_img_url : '',
+              ];
+            }
+            // if ( $query->have_posts() ) {
+            //   while ( $query->have_posts() ) {
+            //     //$featured_img_url = get_the_post_thumbnail_url(get_the_ID());
+            //     $products[] = [
+            //       //'id' => get_the_ID(),
+            //       //'name' => get_the_title(),
+            //       //'slug' => get_the_slug(),
+            //       //'src' => $featured_img_url ? $featured_img_url : '',
+            //     ];
+            //   }
+            // }
+            // // Restore original post data.
+            wp_reset_postdata();
+            $arr['products'] = $products;
+          }else{
+            $arr = $cat_arr;
+          }
         }
       }
     }

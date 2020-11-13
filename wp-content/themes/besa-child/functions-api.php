@@ -1571,7 +1571,7 @@ function api_checkupdate($request){
   }
 
   global $wpdb;
-  $sql = "SELECT action, type, object_id FROM {$wpdb->prefix}notifications_woo_change WHERE timestamp >= $checkTimeFrom ";
+  $sql = "SELECT action, type, object_id, date_time FROM {$wpdb->prefix}notifications_woo_change WHERE timestamp >= $checkTimeFrom ";
   $results = $wpdb->get_results($sql);
   $resData = array();
   $resData['haschange'] = 0;
@@ -1580,6 +1580,7 @@ function api_checkupdate($request){
     if($result->action == 'delete' OR $result->action == 'trash'){
       $arr = [
         'id' => $result->object_id,
+        'updated_time' => $result->date_time
       ];
     }else{
       if($result->type == 'product'){
@@ -1595,6 +1596,7 @@ function api_checkupdate($request){
               'status' => $product->get_status(),
               'sku' => $product->get_sku(),
               'src' => $featured_img_url ? $featured_img_url : '',
+              'updated_time' => $result->date_time
             ];
           }
         }
@@ -1608,6 +1610,7 @@ function api_checkupdate($request){
             'name' => $term->name,
             'slug' => $term->slug,
             'src' => $featured_img_url ? $featured_img_url : '',
+            'updated_time' => $result->date_time
           ];
           if($result->action == 'addnew'){
             $arr['cat_info'] = $cat_arr;
@@ -1636,18 +1639,6 @@ function api_checkupdate($request){
                 'src' => $featured_img_url ? $featured_img_url : '',
               ];
             }
-            // if ( $query->have_posts() ) {
-            //   while ( $query->have_posts() ) {
-            //     //$featured_img_url = get_the_post_thumbnail_url(get_the_ID());
-            //     $products[] = [
-            //       //'id' => get_the_ID(),
-            //       //'name' => get_the_title(),
-            //       //'slug' => get_the_slug(),
-            //       //'src' => $featured_img_url ? $featured_img_url : '',
-            //     ];
-            //   }
-            // }
-            // // Restore original post data.
             wp_reset_postdata();
             $arr['products'] = $products;
           }else{

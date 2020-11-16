@@ -73,6 +73,12 @@ add_action('rest_api_init', function () {
     'callback' => 'api_getproductcategory',
   ]);
 
+  // get list products in woo
+  register_rest_route('func', '/getallproducts', [
+    'methods' => 'GET',
+    'callback' => 'api_getallproducts',
+  ]);
+
   register_rest_route('func', '/addshippingaddress', [
     'methods' => 'POST',
     'callback' => 'api_addshippingaddress',
@@ -1664,4 +1670,37 @@ function api_checkupdate($request){
 
   wp_send_json( $resData, 200 );
   return true;
+}
+
+function api_getallproducts(){
+	$queryArgs = array(
+		'post_type'             => 'product',
+		'post_status'           => 'publish',
+		'posts_per_page'        => -1,
+	);
+	$query = new WP_Query($queryArgs);
+	$products = [];
+	foreach($query->posts as $p){
+		//$product   = wc_get_product( $p->ID );
+		$featured_img_url = get_the_post_thumbnail_url($p->ID);
+		$terms = get_the_terms( $p->ID, 'product_cat' );
+		$cat = '';
+		foreach ($terms as $term) {
+			if($cat == ''){
+				$cat = $term->term_id;
+			}else{
+				$cat .= ','.$term->term_id;
+			}
+		}
+		$products[] = [
+			'id' => $p->ID,
+			'name' => $p->post_title,
+			'slug' => $p->post_name,
+			'src' => $featured_img_url ? $featured_img_url : '',
+			'categories' => $cat
+		];
+		//echo "<pre>"; print_r($product); echo "</pre>".__FILE__.": ".__LINE__."";
+	}
+	wp_send_json( $products, 200 );
+	wp_reset_postdata();
 }

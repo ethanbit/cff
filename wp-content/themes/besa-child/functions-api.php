@@ -1681,7 +1681,7 @@ function api_getallproducts(){
 	$query = new WP_Query($queryArgs);
 	$products = [];
 	foreach($query->posts as $p){
-		//$product   = wc_get_product( $p->ID );
+		$woo_product   = wc_get_product( $p->ID );
 		$featured_img_url = get_the_post_thumbnail_url($p->ID);
 		$terms = get_the_terms( $p->ID, 'product_cat' );
 		$cat = '';
@@ -1697,6 +1697,7 @@ function api_getallproducts(){
 			'name' => $p->post_title,
 			'slug' => $p->post_name,
 			'src' => $featured_img_url ? $featured_img_url : '',
+			'sku' => $woo_product->get_sku(),
 			'categories' => $cat
 		];
 		//echo "<pre>"; print_r($product); echo "</pre>".__FILE__.": ".__LINE__."";

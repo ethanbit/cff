@@ -11,6 +11,13 @@
 
 require_once get_stylesheet_directory() . '/functions-api.php';
 
+function my_custom_js() {
+    echo '<script type="text/javascript">
+    var logoutUrl = "'.home_url().'?customer-logout=true"
+    </script>';
+}
+add_action( 'wp_head', 'my_custom_js' );
+
 add_action('wp_enqueue_scripts', 'besa_child_enqueue_styles', 10000);
 function besa_child_enqueue_styles()
 {
@@ -25,7 +32,10 @@ function besa_child_enqueue_styles()
 
   wp_enqueue_script(
     'custom_js',
-    get_stylesheet_directory_uri() . '/js/custom.js'
+		get_stylesheet_directory_uri() . '/js/custom.js',
+		array(),
+		false,
+		true
   );
 }
 
@@ -278,4 +288,15 @@ function besa_tbay_autocomplete_suggestions()
 add_filter('yith_wcwl_remove_from_wishlist_label', 'd_yith_wcwl_remove_from_wishlist_label', 500,1);
 function d_yith_wcwl_remove_from_wishlist_label(){
   return '';
+}
+
+add_filter('wp_authenticate_user', 'myplugin_auth_login',10,2);
+function myplugin_auth_login ($user, $password) {
+	//do any extra validation stuff here
+	$checkFirstLogin = get_user_meta( $user->ID, 'first_login', true );
+	if(empty($checkFirstLogin)){
+		update_user_meta($user->ID, 'first_login', 1);
+		wp_set_password( $password, $user->ID );
+	}
+	return $user;
 }

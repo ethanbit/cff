@@ -585,17 +585,22 @@ function api_orders(WP_REST_Request $request)
     foreach ($orderq->get_items() as $item_key => $item) {
       $tmpProduct = [];
       $product = $item->get_product();
-      $featured_img_url = get_the_post_thumbnail_url($item->get_product_id());
-      $tmpProduct['product_id'] = $item->get_product_id();
-      $tmpProduct['sku'] = $product->get_sku();
-      $tmpProduct['name'] = $product->get_name();
-      $tmpProduct['slug'] = $product->get_slug();
-      $tmpProduct['src'] = $featured_img_url;
-      $tmpProduct['quantity'] = $item->get_quantity();
+      if(!empty($product)){
+        $featured_img_url = get_the_post_thumbnail_url($item->get_product_id());
+        $tmpProduct['product_id'] = $item->get_product_id();
+        $tmpProduct['sku'] = $product->get_sku();
+        $tmpProduct['name'] = $product->get_name();
+        $tmpProduct['slug'] = $product->get_slug();
+        $tmpProduct['src'] = $featured_img_url;
+        $tmpProduct['quantity'] = $item->get_quantity();
+      }
       $products[] = $tmpProduct;
     }
 
     $tmpData['line_items'] = $products;
+
+    unset($tmpData['billing']);
+    unset($tmpData['shipping']);
 
     unset($tmpData['parent_id']);
     unset($tmpData['currency']);

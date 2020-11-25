@@ -594,16 +594,18 @@ function api_orders(WP_REST_Request $request)
         $tmpProduct['src'] = $featured_img_url;
         $tmpProduct['quantity'] = $item->get_quantity();
       }
-      $products[] = $tmpProduct;
+      if(count($tmpProduct)){
+        $products[] = $tmpProduct;
+      }
     }
 
-    if(!empty($products)){
+    unset($tmpData['line_items']);
+    if(count($products)){
       $tmpData['line_items'] = $products;
+    }else{
+      $tmpData['line_items'] = [];
     }
-
-    unset($tmpData['billing']);
-    unset($tmpData['shipping']);
-
+    
     unset($tmpData['parent_id']);
     unset($tmpData['currency']);
     unset($tmpData['version']);

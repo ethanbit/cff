@@ -154,7 +154,7 @@ function api_login2($request){
     $errDatas = $token->errors;
     $msg = '';
     foreach($errDatas as $k => $errData){
-      $msg = $errData[0];
+      $msg = strip_tags($errData[0]);
     }
     return wp_send_json(['error' => 1, 'msg' => $msg, 'data' => ''], 200);
   }

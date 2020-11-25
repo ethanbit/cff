@@ -597,9 +597,7 @@ function api_orders(WP_REST_Request $request)
       $products[] = $tmpProduct;
     }
 
-    if(!empty($products)){ 
-      $tmpData['line_items'] = $products; 
-    } 
+    
 
     unset($tmpData['billing']);
     unset($tmpData['shipping']);

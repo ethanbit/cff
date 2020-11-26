@@ -66,7 +66,7 @@ foreach ( $items as $item_id => $item ) :
 
 		?>
 		</td>
-		<td>
+		<td class="td" style="text-align:<?php echo esc_attr( $text_align ); ?>; vertical-align:middle; font-family: 'Helvetica Neue', Helvetica, Roboto, Arial, sans-serif;">
 		<?php
 		  // SKU.
 		if ( $sku ) {

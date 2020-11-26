@@ -1292,7 +1292,7 @@ function api_createorder($request)
     update_post_meta(
       $order->id,
       'delivery_date',
-      date('d-m-Y', $deliveryDate)
+      date('d/m/Y', $deliveryDate)
     );
   }
   wp_send_json(

@@ -1291,7 +1291,7 @@ function api_createorder($request)
   if (is_numeric($deliveryDate)) {
     update_post_meta(
       $order->id,
-      '_billing_wooccm11',
+      'delivery_date',
       date('Y-m-d', $deliveryDate)
     );
   }

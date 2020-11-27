@@ -1284,17 +1284,19 @@ function api_createorder($request)
   $order->set_payment_method($payment_gateways['bacs']);
 
   $order->calculate_totals(true); //setting true included tax
-  //Set order status to processing
-  $order->set_status('processing');
-  $order->save();
 
   if (is_numeric($deliveryDate)) {
     update_post_meta(
       $order->id,
-      'delivery_date',
+      '_delivery_date',
       date('d/m/Y', $deliveryDate)
     );
   }
+
+  //Set order status to processing
+  $order->set_status('completed');
+  $order->save();
+
   wp_send_json(
     ['msg' => 'Created order.', 'err' => 0, 'data' => $order->id],
     200

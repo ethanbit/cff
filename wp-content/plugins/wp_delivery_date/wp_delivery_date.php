@@ -131,7 +131,7 @@ function wp_delivery_date_save_data($order_id)
   if (!empty($_POST['delivery_date'])) {
     update_post_meta(
       $order_id,
-      'delivery_date',
+      '_delivery_date',
       sanitize_text_field($_POST['delivery_date'])
     );
   }
@@ -146,8 +146,7 @@ add_action('woocommerce_email_order_meta', 'wp_delivery_date_display');
 
 function wp_delivery_date_display($order)
 {
-  //echo "<pre>".$order->id; print_r($order); echo "</pre>".__FILE__.": ".__LINE__."";
   echo '<p><strong>Delivery Date:</strong> ' .
-    get_post_meta($order->id, 'delivery_date', true) .
+    get_post_meta($order->id, '_delivery_date', true) .
     '</p>';
 }

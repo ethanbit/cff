@@ -146,7 +146,8 @@ add_action('woocommerce_email_order_meta', 'wp_delivery_date_display');
 
 function wp_delivery_date_display($order)
 {
+  //echo "<pre>".$order->id; print_r($order); echo "</pre>".__FILE__.": ".__LINE__."";
   echo '<p><strong>Delivery Date:</strong> ' .
-    get_post_meta($order->get_id(), 'delivery_date', true) .
+    get_post_meta($order->id, 'delivery_date', true) .
     '</p>';
 }

@@ -1285,7 +1285,7 @@ function api_createorder($request)
 
   $order->calculate_totals(true); //setting true included tax
   //Set order status to processing
-  $order->set_status('completed');
+  $order->set_status('processing');
   $order->save();
 
   if (is_numeric($deliveryDate)) {

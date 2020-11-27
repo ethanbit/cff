@@ -1294,6 +1294,10 @@ function api_createorder($request)
   }
 
   //Set order status to processing
+  $order->set_status('processing');
+  $order->save();
+
+  //Set order status to processing
   $order->set_status('completed');
   $order->save();
 

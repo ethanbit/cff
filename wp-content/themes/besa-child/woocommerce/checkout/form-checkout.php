@@ -40,12 +40,11 @@ if( class_exists('WooCommerce_Germanized') ) $class_checkout .= ' wc-germanized'
 
 		<div class="col2-set" id="customer_details">
 			<div class="col-1">
-				
-				<?php do_action( 'woocommerce_checkout_billing' ); ?>
+				<?php do_action( 'woocommerce_checkout_shipping' ); ?>
 			</div>
 
 			<div class="col-2">
-				<?php //do_action( 'woocommerce_checkout_shipping' ); ?>
+				<?php // do_action( 'woocommerce_checkout_billing' );?>
 			</div>
 		</div>
 
@@ -64,7 +63,7 @@ if( class_exists('WooCommerce_Germanized') ) $class_checkout .= ' wc-germanized'
 				<?php // do_action( 'woocommerce_checkout_order_review' ); ?>
 			</div> 
 		</div>-->
-		<?php do_action( 'woocommerce_checkout_shipping' ); ?>
+		
 		<?php if( !class_exists('WooCommerce_Germanized') ) : ?>
 			<div class="order-payment">
 				<!-- <h3 id="order_payment_heading"><?php // esc_html_e( 'Payment method', 'besa' ); ?></h3> -->

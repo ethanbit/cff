@@ -33,6 +33,119 @@ if (!class_exists('OCWMA_front')) {
               </div>
               <?php
     }
+    
+    function showBillingAddress($user, $user_id){
+      //echo '<div class="ocwma_table_bill">';
+      if (!empty($user)) {
+      ?>
+        <!-- <div class="ocwma_bill_table"> -->
+      <?php
+        foreach ($user as $row) {
+          $userdata_bil = $row->userdata;
+          $user_data = unserialize($userdata_bil);
+        ?>
+          <div class="dh_multil_billing_address">
+            <p>
+              <span><b><?php echo $user_data['reference_field'] ?></b></span>
+              <span>
+                <button type="button" class="btn btn-primary btn-sm form_option_edit" data-id="<?php echo $user_id ?>"  data-eid-bil="<?php echo $row->id ?>"><i class="fa fa-pencil" aria-hidden="true"></i> edit</button>
+                <a href="?action=delete_ocma&did=<?php echo $row->id ?>" class="btn btn-sm btn-danger delete_btn"><i class="fa fa-trash" aria-hidden="true"></i> Delete</a>
+              </span>
+            </p>
+            <p>
+              <span ><?php echo 
+              $user_data['billing_first_name'] .
+              '&nbsp' .
+              $user_data['billing_last_name'] ?></span>
+            </p>
+              <span><?php echo $user_data['billing_company'] ?></span>
+            </p>
+            <p>
+              <span><?php echo $user_data['billing_address_1'] ?></span>
+            </p>
+            <p>
+              <span><?php echo $user_data['billing_address_2'] ?></span>
+            </p>
+            <p>
+              <span><?php echo $user_data['billing_city'].' '.$user_data['billing_state'].' '.$user_data['billing_postcode']. ' '.$user_data['billing_country'] ?></span>
+            </p>
+            <!-- <p>
+              <span><?php echo $user_data['billing_country'] ?></span>
+            </p>
+            <p>
+              <span><?php echo $user_data['billing_postcode'] ?></span>
+            </p>
+            <p>
+              <span><?php echo $user_data['billing_state'] ?></span>
+            </p> -->
+          </div>
+        <?php
+        }
+        ?>
+        <!-- </div> -->
+        <?php
+      }
+      //echo '</div>';
+    }
+
+    function showShippingAddress($tablename, $user_id){
+      global $wpdb;
+      $user_shipping = $wpdb->get_results(
+        "SELECT * FROM {$tablename} WHERE type='shipping' AND userid=" .
+          $user_id
+      );
+      echo '<div class="ocwma_table_ship">';
+      if (!empty($user_shipping)) {
+      ?>
+      <div class="ocwma_ship_table">
+      <?php
+        foreach ($user_shipping as $row) {
+          $userdata_ship = $row->userdata;
+          $user_data = unserialize($userdata_ship);
+        ?>
+          <div class="dh_multil_shipping_address">
+            <p>
+              <span><b><?php echo $user_data['reference_field'] ?></b></span>
+              <span>
+                <button class="btn btn-primary form_option_ship_edit" data-id="<?php echo $user_id ?>"  data-eid-ship="<?php echo $row->id ?>"><i class="fa fa-pencil" aria-hidden="true"></i> edit</button>
+                <a href="?action=delete-ship&did-ship=<?php echo $row->id ?>" class="btn btn-danger delete_btn"><i class="fa fa-trash" aria-hidden="true"></i> Delete</a>
+              </span>
+            </p>
+            <p>
+              <span ><?php echo 
+                $user_data['shipping_first_name'] .
+                '&nbsp' .
+                $user_data['shipping_last_name'] ?></span>
+            </p>
+              <span><?php echo $user_data['shipping_company'] ?></span>
+            </p>
+            <p>
+            <span><?php echo $user_data['shipping_address_1'] ?></span>
+            </p>
+            <p>
+              <span><?php echo $user_data['shipping_address_2'] ?></span>
+            </p>
+            <p>
+              <span><?php echo $user_data['shipping_city'].' '.$user_data['shipping_state'].' '.$user_data['shipping_postcode'].' '.$user_data['shipping_country']  ?></span>
+            </p>
+            <!-- <p>
+              <span><?php echo $user_data['shipping_country'] ?></span>
+            </p>
+            <p>
+              <span><?php echo $user_data['shipping_postcode'] ?></span>
+            </p>
+            <p>
+              <span><?php echo $user_data['shipping_state'] ?></span>
+            </p> -->
+          </div>
+        <?php
+        }
+      ?>
+      </div>
+      <?php
+      }
+      echo '</div>';
+    }
 
     function ocwma_my_account_endpoint_content()
     {
@@ -42,156 +155,49 @@ if (!class_exists('OCWMA_front')) {
       $user = $wpdb->get_results(
         "SELECT * FROM {$tablename} WHERE type='billing' AND userid=" . $user_id
       );
-      echo '<div class="ocwma_table_custom">';
-      echo '<div class="ocwma_table_bill">';
-      if (!empty($user)) {
-        //echo "<table width='100%'>";
-        //echo '<tbody>';
-        echo '<table class="ocwma_bill_table">';
-        foreach ($user as $row) {
-          $userdata_bil = $row->userdata;
-          $user_data = unserialize($userdata_bil);
-          echo '<tr>';
-          echo '<td><b>' . $user_data['reference_field'] . '</b></td>';
-          echo '<td>
-            <button type="button" class="btn btn-primary form_option_edit" data-id="' .
-            $user_id .
-            '"  data-eid-bil="' .
-            $row->id .
-            '"><i class="fa fa-pencil" aria-hidden="true"></i> edit</button>
-            <a href="?action=delete_ocma&did=' .
-            $row->id .
-            '" class="btn btn-danger delete_btn"><i class="fa fa-trash" aria-hidden="true"></i> Delete</a>
-            </td>';
-          echo '</tr>';
-          // echo '<tr>';
-          // echo '<td >' . $user_data['reference_field'] . '</td>';
-          // echo '</tr>';
-          echo '<tr>';
-          echo '<td >' .
-            $user_data['billing_first_name'] .
-            '&nbsp' .
-            $user_data['billing_last_name'] .
-            '</td>';
-          echo '</tr>';
-          echo '<td>' . $user_data['billing_company'] . '</td>';
-          echo '</tr>';
-          echo '<tr>';
-          echo '<td>' . $user_data['billing_address_1'] . '</td>';
-          echo '</tr>';
-          echo '<tr>';
-          echo '<td>' . $user_data['billing_address_2'] . '</td>';
-          echo '</tr>';
-          echo '<tr>';
-          echo '<td>' . $user_data['billing_city'] . '</td>';
-          echo '</tr>';
-          echo '<tr>';
-          echo '<td>' . $user_data['billing_country'] . '</td>';
-          echo '</tr>';
-          echo '<tr>';
-          echo '<td>' . $user_data['billing_postcode'] . '</td>';
-          echo '</tr>';
-          echo '<tr>';
-          echo '<td>' . $user_data['billing_state'] . '</td>';
-          echo '</tr>';
-          echo '</tr>';
-        }
-        echo '</table>';
-      }
-      echo '</div>';
-      $user_shipping = $wpdb->get_results(
-        "SELECT * FROM {$tablename} WHERE type='shipping' AND userid=" .
-          $user_id
-      );
-      echo '<div class="ocwma_table_ship">';
-      if (!empty($user_shipping)) {
-        //echo "<table width='100%'>";
-        //echo '<tbody>';
-        echo '<table class="ocwma_ship_table">';
-        foreach ($user_shipping as $row) {
-          $userdata_ship = $row->userdata;
-          $user_data = unserialize($userdata_ship);
-          echo '<tr>';
-          echo '<td><b>' . $user_data['reference_field'] . '</b></td>';
-          echo '<td>
-            <button class="btn btn-primary form_option_ship_edit" data-id="' .
-            $user_id .
-            '"  data-eid-ship="' .
-            $row->id .
-            '"><i class="fa fa-pencil" aria-hidden="true"></i> edit</button>
-            <a href="?action=delete-ship&did-ship=' .
-            $row->id .
-            '" class="btn btn-danger delete_btn"><i class="fa fa-trash" aria-hidden="true"></i> Delete</a></td>';
-          echo '</tr>';
-          // echo '<tr>';
-          // echo '<td >' . $user_data['reference_field'] . '</td>';
-          // echo '</tr>';
-          echo '<tr>';
-          echo '<td >' .
-            $user_data['shipping_first_name'] .
-            '&nbsp' .
-            $user_data['shipping_last_name'] .
-            '</td>';
-          echo '</tr>';
-          echo '<td>' . $user_data['shipping_company'] . '</td>';
-          echo '</tr>';
-          echo '<tr>';
-          echo '<td>' . $user_data['shipping_address_1'] . '</td>';
-          echo '</tr>';
-          echo '<tr>';
-          echo '<td>' . $user_data['shipping_address_2'] . '</td>';
-          echo '</tr>';
-          echo '<tr>';
-          echo '<td>' . $user_data['shipping_city'] . '</td>';
-          echo '</tr>';
-          echo '<tr>';
-          echo '<td>' . $user_data['shipping_country'] . '</td>';
-          echo '</tr>';
-          echo '<tr>';
-          echo '<td>' . $user_data['shipping_postcode'] . '</td>';
-          echo '</tr>';
-          echo '<tr>';
-          echo '<td>' . $user_data['shipping_state'] . '</td>';
-          echo '</tr>';
-          echo '</tr>';
-        }
-        echo '</table>';
-      }
-      echo '</div>';
-      echo '</div>';
+      //echo '<div class="ocwma_table_custom">';
+      
+      $this->showBillingAddress($user, $user_id);
+      $this->showShippingAddress($tablename, $user_id);
+      
+      //echo '</div>';
       ?>
             <div class="cus_menu">
                 <div class="billling-button">
                   <button class="form_option_billing" data-id="<?php echo $user_id; ?>" style="background-color: <?php echo get_option(
-  'ocwma_btn_bg_clr',
-  '#000000'
-); ?>; color: <?php echo get_option(
-  'ocwma_font_clr',
-  '#ffffff'
-); ?>; padding: <?php echo get_option(
-  'ocwma_btn_padding',
-  '8px 10px'
-); ?>; font-size: <?php echo get_option('ocwma_font_size', '15') .
-  'px'; ?>;"><?php echo get_option(
-  'ocwma_head_title',
-  'Add Billing Address'
-); ?></button>
+                    'ocwma_btn_bg_clr',
+                    '#000000'
+                  ); ?>; color: <?php echo get_option(
+                    'ocwma_font_clr',
+                    '#ffffff'
+                  ); ?>; padding: <?php echo get_option(
+                    'ocwma_btn_padding',
+                    '8px 10px'
+                  ); ?>; font-size: <?php echo get_option('ocwma_font_size', '15') .
+                    'px'; ?>;">
+                      <?php echo get_option(
+                      'ocwma_head_title',
+                      'Add Billing Address'
+                      ); ?>
+                  </button>
                 </div>
                 <div class="shipping-button">
                   <button class="form_option_shipping" data-id="<?php echo $user_id; ?>" style="background-color: <?php echo get_option(
-  'ocwma_btn_bg_clr',
-  '#000000'
-); ?>; color: <?php echo get_option(
-  'ocwma_font_clr',
-  '#ffffff'
-); ?>; padding: <?php echo get_option(
-  'ocwma_btn_padding',
-  '8px 10px'
-); ?>; font-size: <?php echo get_option('ocwma_font_size', '15') .
-  'px'; ?>;"><?php echo get_option(
-  'ocwma_head_title_ship',
-  'Add Shipping Address'
-); ?></button>
+                    'ocwma_btn_bg_clr',
+                    '#000000'
+                  ); ?>; color: <?php echo get_option(
+                    'ocwma_font_clr',
+                    '#ffffff'
+                  ); ?>; padding: <?php echo get_option(
+                    'ocwma_btn_padding',
+                    '8px 10px'
+                  ); ?>; font-size: <?php echo get_option('ocwma_font_size', '15') .
+                    'px'; ?>;">
+                      <?php echo get_option(
+                      'ocwma_head_title_ship',
+                      'Add Shipping Address'
+                      ); ?>
+                  </button>
                 </div>
             </div>
               <?php

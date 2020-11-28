@@ -300,3 +300,11 @@ function myplugin_auth_login ($user, $password) {
 	}
 	return $user;
 }
+
+add_filter('woocommerce_cart_contents_count', 'dh_woocommerce_cart_contents_count');
+function dh_woocommerce_cart_contents_count($quantity){
+  global $woocommerce;
+  $items = $woocommerce->cart->get_cart();
+
+  return count($items);
+}

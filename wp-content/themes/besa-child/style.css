@@ -62,3 +62,62 @@ table.ui-datepicker-calendar {
 #tbay-header .tbay-login {
   z-index: 99999;
 }
+
+.woocommerce-checkout .woocommerce-notices-wrapper {
+  display: none;
+}
+
+.woocommerce-shipping-fields,
+.ocwma_table_ship,
+.cus_menu .shipping-button {
+  display: none;
+}
+
+.woocommerce-MyAccount-content .addresses .type-shipping,
+.woocommerce-column--shipping-address {
+  display: none;
+}
+
+.woocommerce .col2-set.addresses > div,
+.woocommerce-page .col2-set.addresses > div.type-billing {
+  margin: 0;
+}
+
+.woocommerce .col2-set.addresses,
+.woocommerce-page .col2-set.addresses {
+  display: block;
+  float: left;
+  flex-wrap: unset;
+  min-height: 230px;
+  margin: 0 5px;
+}
+
+.woocommerce-page .col2-set.addresses > div {
+  min-height: 230px;
+}
+
+.woocommerce-page .col2-set.addresses address,
+.woocommerce-page .col2-set.addresses header h3,
+.woocommerce-page .col2-set.addresses header a {
+  padding: 0 20px;
+}
+
+.dh_multil_billing_address {
+  width: auto;
+  float: left;
+  border: 1px solid #d0d0d0;
+  padding: 20px;
+  min-height: 230px;
+  margin: 0 5px;
+}
+
+.dh_multil_billing_address button,
+.dh_multil_billing_address a {
+  border: none !important;
+  color: #fff !important;
+}
+
+.woocommerce {
+  float: left;
+  width: 100%;
+}

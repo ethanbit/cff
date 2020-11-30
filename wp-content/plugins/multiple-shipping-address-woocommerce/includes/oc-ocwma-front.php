@@ -477,16 +477,27 @@ if (!class_exists('OCWMA_front')) {
     function ocwma_billing_data_select()
     {
       $user_id = get_current_user_id();
+      $customerAddressInfo = new WC_Customer($user_id);
+      $wooBilling = $customerAddressInfo->billing;
       $select_id = sanitize_text_field($_REQUEST['sid']);
       global $wpdb;
-      $tablename = $wpdb->prefix . 'ocwma_billingadress';
-      $user = $wpdb->get_results(
-        "SELECT * FROM {$tablename} WHERE type='billing' AND userid=" .
-          $user_id .
-          ' AND id=' .
-          $select_id
-      );
-      $user_data = unserialize($user[0]->userdata);
+
+      if($select_id){
+        $tablename = $wpdb->prefix . 'ocwma_billingadress';
+        $user = $wpdb->get_results(
+          "SELECT * FROM {$tablename} WHERE type='billing' AND userid=" .
+            $user_id .
+            ' AND id=' .
+            $select_id
+        );
+        $user_data = unserialize($user[0]->userdata);
+      }else{
+        $user_data = [];
+        foreach($wooBilling as $k => $billding){
+          $user_data['billing_'.$k] = $billding;
+        }        
+      }
+
       echo json_encode($user_data);
       exit();
     }
@@ -515,39 +526,43 @@ if (!class_exists('OCWMA_front')) {
       global $wpdb;
       $tablename = $wpdb->prefix . 'ocwma_billingadress';
       ?>
-         <select class="ocwma_select">
-          <option>...Choose address...</option>
-          <?php
-          $user = $wpdb->get_results(
-            "SELECT * FROM {$tablename} WHERE type='billing' AND userid=" .
-              $user_id
-          );
-          foreach ($user as $row) {
+      <select class="ocwma_select">
+      <option>...Choose address...</option>
+      <option value="0">Default Address</option>
+      <?php
+      $user = $wpdb->get_results(
+        "SELECT * FROM {$tablename} WHERE type='billing' AND userid=" .
+          $user_id
+      );
+      foreach ($user as $row) {
 
-            $userdata_bil = $row->userdata;
-            $user_data = unserialize($userdata_bil);
-            ?> <option value="<?php echo $row->id; ?>">  <?php echo $user_data[
-  'reference_field'
-]; ?></option><?php
-          }
-          ?>
-          </select>
-          <button class="form_option_billing" data-id="<?php echo $user_id; ?>" style="background-color: <?php echo get_option(
-  'ocwma_btn_bg_clr',
-  '#000000'
-); ?>; color: <?php echo get_option(
-  'ocwma_font_clr',
-  '#ffffff'
-); ?>; padding: <?php echo get_option(
-  'ocwma_btn_padding',
-  '8px 10px'
-); ?>; font-size: <?php echo get_option('ocwma_font_size', '15') .
-  'px'; ?>;"><?php echo get_option(
-  'ocwma_head_title',
-  'Add Billing Address'
-); ?></button>
+        $userdata_bil = $row->userdata;
+        $user_data = unserialize($userdata_bil);
+        ?> 
+        <option value="<?php echo $row->id; ?>">  
+          <?php echo $user_data['reference_field']; ?></option>
+      <?php
+      }
+      ?>
+      </select>
+      <button class="form_option_billing" data-id="<?php echo $user_id; ?>" style="background-color: <?php echo get_option(
+          'ocwma_btn_bg_clr',
+          '#000000'
+        ); ?>; color: <?php echo get_option(
+          'ocwma_font_clr',
+          '#ffffff'
+        ); ?>; padding: <?php echo get_option(
+          'ocwma_btn_padding',
+          '8px 10px'
+        ); ?>; font-size: <?php echo get_option('ocwma_font_size', '15') .
+          'px'; ?>;">
+          <?php echo get_option(
+          'ocwma_head_title',
+          'Add Billing Address'
+        ); ?>
+      </button>
 
-          <?php
+      <?php
     }
 
     function OCWMA_all_shipping_address()
@@ -556,39 +571,40 @@ if (!class_exists('OCWMA_front')) {
       global $wpdb;
       $tablename = $wpdb->prefix . 'ocwma_billingadress';
       ?>
-           <select class="ocwma_select_shipping">
-            <option>...Choose address...</option>
-            <?php
-            $user = $wpdb->get_results(
-              "SELECT * FROM {$tablename} WHERE type='shipping' AND userid=" .
-                $user_id
-            );
-            foreach ($user as $row) {
+      <select class="ocwma_select_shipping">
+      <option>...Choose address...</option>
+      <?php
+      $user = $wpdb->get_results(
+        "SELECT * FROM {$tablename} WHERE type='shipping' AND userid=" .
+          $user_id
+      );
+      foreach ($user as $row) {
 
-              $userdata_bil = $row->userdata;
-              $user_data = unserialize($userdata_bil);
-              ?> <option value="<?php echo $row->id; ?>">  <?php echo $user_data[
-  'reference_field'
-]; ?></option><?php
-            }
-            ?>
-            </select>
-            <button class="form_option_shipping" data-id="<?php echo $user_id; ?>" style="background-color: <?php echo get_option(
-  'ocwma_btn_bg_clr',
-  '#000000'
-); ?>; color: <?php echo get_option(
-  'ocwma_font_clr',
-  '#ffffff'
-); ?>; padding: <?php echo get_option(
-  'ocwma_btn_padding',
-  '8px 10px'
-); ?>; font-size: <?php echo get_option('ocwma_font_size', '15') .
-  'px'; ?>;"><?php echo get_option(
-  'ocwma_head_title_ship',
-  'Add Shipping Address'
-); ?></button>
- 
-            <?php
+        $userdata_bil = $row->userdata;
+        $user_data = unserialize($userdata_bil);
+        ?> <option value="<?php echo $row->id; ?>">  
+        <?php echo $user_data['reference_field']; ?></option><?php
+      }
+      ?>
+      </select>
+      <button class="form_option_shipping" data-id="<?php echo $user_id; ?>" style="background-color: <?php echo get_option(
+        'ocwma_btn_bg_clr',
+        '#000000'
+      ); ?>; color: <?php echo get_option(
+        'ocwma_font_clr',
+        '#ffffff'
+      ); ?>; padding: <?php echo get_option(
+        'ocwma_btn_padding',
+        '8px 10px'
+      ); ?>; font-size: <?php echo get_option('ocwma_font_size', '15') .
+        'px'; ?>;">
+        <?php echo get_option(
+        'ocwma_head_title_ship',
+        'Add Shipping Address'
+      ); ?>
+      </button>
+
+      <?php
     }
 
     function OCWMA_save_options()

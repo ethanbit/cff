@@ -90,7 +90,36 @@ table.ui-datepicker-calendar {
   display: none;
 }
 
+.woocommerce-MyAccount-content {
+  display: flex !important;
+  flex-wrap: wrap;
+  width: 100% !important;
+  justify-content: space-between;
+}
+
+.woocommerce-MyAccount-content p {
+  width: 100%;
+}
+
+.woocommerce .woocommerce-MyAccount-navigation {
+  width: 20% !important;
+}
 .woocommerce .col2-set.addresses > div,
+.woocommerce-page .col2-set.addresses > div {
+  margin: 0px !important;
+}
+
+.woocommerce .col2-set.addresses,
+.woocommerce-page .col2-set.addresses {
+  margin: 5px !important;
+  width: calc(33.3% - 10px);
+}
+
+.woocommerce-account .addresses .title .edit {
+  margin-right: 15px !important;
+}
+
+/*.woocommerce .col2-set.addresses > div,
 .woocommerce-page .col2-set.addresses > div.type-billing {
   margin: 0;
 }
@@ -98,7 +127,6 @@ table.ui-datepicker-calendar {
 .woocommerce .col2-set.addresses,
 .woocommerce-page .col2-set.addresses {
   display: block;
-  float: left;
   flex-wrap: unset;
   min-height: 230px;
   margin: 0 5px;
@@ -107,7 +135,7 @@ table.ui-datepicker-calendar {
 .woocommerce-page .col2-set.addresses > div {
   min-height: 230px;
 }
-
+*/
 .woocommerce-page .col2-set.addresses address,
 .woocommerce-page .col2-set.addresses header h3,
 .woocommerce-page .col2-set.addresses header a {
@@ -116,11 +144,11 @@ table.ui-datepicker-calendar {
 
 .dh_multil_billing_address {
   width: auto;
-  float: left;
   border: 1px solid #d0d0d0;
   padding: 20px;
   min-height: 230px;
-  margin: 0 5px;
+  width: calc(33.3% - 10px);
+  margin: 5px;
 }
 
 .dh_multil_billing_address button,
@@ -129,11 +157,22 @@ table.ui-datepicker-calendar {
   color: #fff !important;
 }
 
+.dh_multil_billing_address button:hover {
+  background: #bdcd3b !important;
+}
+
 .woocommerce {
   float: left;
   width: 100%;
 }
 
+.u-columns.woocommerce-Addresses.col2-set.addresses {
+  -webkit-box-flex: inherit;
+  -moz-box-flex: inherit;
+  -webkit-flex: inherit;
+  -ms-flex: inherit;
+  flex: inherit;
+}
 .yith-wcwl-form.wishlist-fragment .product-quantity input {
   max-width: 48px;
   text-align: center;

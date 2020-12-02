@@ -840,21 +840,18 @@ function api_getcategories()
     exit();
   }
 
-  if (!empty($page)) {
-    $params[] = 'page=' . $page;
+  // if (!empty($page)) {
+  //   $params[] = 'page=' . $page;
+  // }
+  // if (!empty($per_page)) {
+  //   $params[] = 'per_page=' . $per_page;
+  // }
+  
+  if (empty($order)) {
+    $order = 'DESC';
   }
-  if (!empty($per_page)) {
-    $params[] = 'per_page=' . $per_page;
-  }
-  if (!empty($order)) {
-    $params[] = 'order=' . $order;
-  }
-  if (!empty($orderby)) {
-    $params[] = 'orderby=' . $orderby;
-  }
-
-  if (!empty($params)) {
-    $query = implode('&', $params);
+  if (empty($orderby)) {
+    $orderby = 'name';
   }
 
   $data = [];
@@ -862,57 +859,96 @@ function api_getcategories()
   $data['err'] = '0';
   $data['data'] = '';
 
-  $consumer_key = WOO_CONSUMER_KEY;
-  $consumer_secret = WOO_CONSUMER_SECRET;
-  $WOO_API_URL =
-    get_home_url() .
-    // 'https://test.cityfinefoods.com.au' .
-    "/wp-json/wc/v3/products/categories?consumer_key={$consumer_key}&consumer_secret=" .
-    $consumer_secret;
+  // $consumer_key = WOO_CONSUMER_KEY;
+  // $consumer_secret = WOO_CONSUMER_SECRET;
+  // $WOO_API_URL =
+  //   get_home_url() .
+  //   // 'https://test.cityfinefoods.com.au' .
+  //   "/wp-json/wc/v3/products/categories?consumer_key={$consumer_key}&consumer_secret=" .
+  //   $consumer_secret;
 
-  $categories = json_decode(file_get_contents($WOO_API_URL . '&' . $query));
-  $newCategories = [];
-  foreach ($categories as $category) {
-    $category->src = $category->image->src;
-    unset($category->description);
-    unset($category->display);
-    unset($category->image);
-    unset($category->menu_order);
-    unset($category->_links);
-    $newCategories[] = $category;
-  }
-  $data['data'] = $newCategories;
+  // $categories = json_decode(file_get_contents($WOO_API_URL . '&' . $query));
+  // $newCategories = [];
+  // foreach ($categories as $category) {
+  //   $category->src = $category->image->src;
+  //   unset($category->description);
+  //   unset($category->display);
+  //   unset($category->image);
+  //   unset($category->menu_order);
+  //   unset($category->_links);
+  //   $newCategories[] = $category;
+  // }
+  // $data['data'] = $newCategories;
+
+  // $args = [
+  //   'taxonomy' => $taxonomy,
+  //   'hide_empty' => $empty,
+  // ];
+  // $all_categories = get_categories($args);
+  // foreach ($all_categories as $cat) {
+  //   $totalCat[$cat->term_id] = $cat;
+  //   if ($cat->category_parent == 0) {
+  //     $category_id = $cat->term_id;
+  //     $args2 = [
+  //       'taxonomy' => $taxonomy,
+  //       'child_of' => 0,
+  //       'parent' => $category_id,
+  //       'hide_empty' => $empty,
+  //     ];
+  //     $sub_cats = get_categories($args2);
+  //     if ($sub_cats) {
+  //       foreach ($sub_cats as $sub_category) {
+  //         $totalCat[$sub_category->term_id] = $sub_category;
+  //       }
+  //     }
+  //   }
+  // }
+
+  // $data['total'] = count($totalCat);
 
   $totalCat = [];
   $taxonomy = 'product_cat';
   $empty = 0;
 
-  $args = [
+  $args3 = [
     'taxonomy' => $taxonomy,
+    'child_of' => 0,
+    //'parent' => 0,
     'hide_empty' => $empty,
+    'orderby' => $orderby,
+    'order' => $order,
   ];
-  $all_categories = get_categories($args);
-  foreach ($all_categories as $cat) {
-    $totalCat[$cat->term_id] = $cat;
-    if ($cat->category_parent == 0) {
-      $category_id = $cat->term_id;
-      $args2 = [
-        'taxonomy' => $taxonomy,
-        'child_of' => 0,
-        'parent' => $category_id,
-        'hide_empty' => $empty,
-      ];
-      $sub_cats = get_categories($args2);
-      if ($sub_cats) {
-        foreach ($sub_cats as $sub_category) {
-          $totalCat[$sub_category->term_id] = $sub_category;
-        }
-      }
-    }
+  $categories = get_categories($args3);
+
+  $newCategories = [];
+  foreach ($categories as $category) {
+    $thumbnail_id = get_woocommerce_term_meta( $category->term_id, 'thumbnail_id', true ); 
+    // get the image URL
+    $image = wp_get_attachment_url( $thumbnail_id ); 
+
+    $tmp['id'] = $category->term_id;
+    $tmp['name'] = $category->name;
+    $tmp['slug'] = $category->slug;
+    $tmp['parent'] = $category->parent;
+    $tmp['count'] = $category->count;
+    $tmp['src'] = $image ? $image : null;
+    $newCategories[] = $tmp;
   }
+  $data['total'] = count($newCategories);
+  $data['data'] = $newCategories;
 
-  $data['total'] = count($totalCat);
 
+  /*
+
+  {
+    "id": 160,
+    "name": "antipasto",
+    "slug": "antipasto",
+    "parent": 159,
+    "count": 46,
+    "src": null
+  }
+  */
   wp_send_json($data, 200);
 }
 

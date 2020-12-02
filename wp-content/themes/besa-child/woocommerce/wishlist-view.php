@@ -89,7 +89,7 @@ if ( ! defined( 'YITH_WCWL' ) ) {
                 </div>
                 <div class="col-sm-12 col-md-1 product-quantity">
                     <?php if( ! $no_interactions && $is_user_owner ): ?>
-                        <input type="number" min="1" step="1" name="items[<?php echo esc_attr( $item->get_product_id() )?>][quantity]" value="<?php echo esc_attr( $item->get_quantity() )?>" />
+                        <input type="number" min="1" step="1" inputmode="numeric" size="4" name="items[<?php echo esc_attr( $item->get_product_id() )?>][quantity]" value="<?php echo esc_attr( $item->get_quantity() )?>" />
                     <?php else: ?>
                         <?php echo trim($item->get_quantity()); ?>
                     <?php endif; ?>
@@ -136,7 +136,7 @@ if ( ! defined( 'YITH_WCWL' ) ) {
                     <?php endif; ?>
                 </div>
                 <div class="col-sm-12 col-md-2 product-remove">
-                    <a href="<?php echo esc_url( add_query_arg( 'remove_from_wishlist', $item->get_product_id() ) ) ?>" class="remove_from_wishlist" title="<?php echo apply_filters( 'yith_wcwl_remove_product_wishlist_message_title', esc_html__( 'Remove this product', 'besa' ) ); ?>"><i class="tb-icon tb-icon-trash"></i><?php esc_html_e( 'Remove', 'besa' ) ?></a>
+                    <a href="<?php echo esc_url( add_query_arg( 'remove_from_wishlist', $item->get_product_id() ) ) ?>" class="btn btn-light remove_from_wishlist" title="<?php echo apply_filters( 'yith_wcwl_remove_product_wishlist_message_title', esc_html__( 'Remove this product', 'besa' ) ); ?>"><i class="tb-icon tb-icon-trash"></i><?php esc_html_e( 'Remove', 'besa' ) ?></a>
                 </div>
             </div>
             <?php

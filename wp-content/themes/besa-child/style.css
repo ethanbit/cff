@@ -20,6 +20,18 @@ Text Domain: besa-child
  * @compatible    WooCommerce 3.4.7
  */
 
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
 #ocwma_billing_popup select,
 #ocwma_shipping_popup select {
   background: none;
@@ -120,4 +132,44 @@ table.ui-datepicker-calendar {
 .woocommerce {
   float: left;
   width: 100%;
+}
+
+.yith-wcwl-form.wishlist-fragment .product-quantity input {
+  max-width: 48px;
+  text-align: center;
+  height: 27px;
+}
+
+a.remove_from_wishlist i {
+  margin-right: 5px;
+}
+.wishlist_table.wishlist_view.shop_table.cart .quantity .box {
+  display: flex;
+  float: left;
+}
+
+.wishlist_table.wishlist_view.shop_table.cart .quantity .box button {
+  line-height: 27px;
+}
+
+.wishlist_table.wishlist_view.shop_table.cart .quantity .box i {
+  color: #000;
+}
+
+.shop_table.cart.wishlist_table.wishlist_view.responsive.mobile li {
+  position: relative;
+}
+
+.shop_table.cart.wishlist_table.wishlist_view.responsive.mobile
+  li
+  .product-remove {
+  position: absolute;
+  top: 0;
+}
+
+.shop_table.cart.wishlist_table.wishlist_view.responsive.mobile
+  li
+  .product-remove
+  a {
+  color: red;
 }

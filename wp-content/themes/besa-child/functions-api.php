@@ -1659,11 +1659,13 @@ function api_checkupdate($request){
         }
       }elseif($result->type == 'category'){
         $term = get_term($result->object_id, 'product_cat');
+        //echo "<pre>"; print_r($term); echo "</pre>".__FILE__.": ".__LINE__."";
         if(is_object($term)){
           $thumb_id = get_woocommerce_term_meta( $term->term_id, 'thumbnail_id', true );
           $featured_img_url = wp_get_attachment_url(  $thumb_id );
           $cat_arr = [
             'id' => $term->term_id,
+            'parent' => $term->parent,
             'name' => $term->name,
             'slug' => $term->slug,
             'src' => $featured_img_url ? $featured_img_url : '',

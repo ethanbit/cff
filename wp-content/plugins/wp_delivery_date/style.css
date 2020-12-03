@@ -37,9 +37,9 @@
   color: gray;
 }
 
-.wp-admin .wrap a,
-.wp-admin .wrap button,
-.wp-admin .wrap input[type="submit"],
+.wp-admin #wpcontent a,
+.wp-admin #wpcontent button,
+.wp-admin #wpcontent input[type="submit"],
 .wp-admin .tablenav .tablenav-pages a,
 .wp-admin .tablenav .tablenav-pages a {
   color: #212529;

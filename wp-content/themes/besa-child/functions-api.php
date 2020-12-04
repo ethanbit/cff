@@ -1634,6 +1634,7 @@ function api_checkupdate($request){
   $resData['haschange'] = 0;
   $resData['data'] = array();
   foreach($results as $result){
+    $arr = [];
     if($result->action == 'delete' OR $result->action == 'trash'){
       $arr = [
         'id' => $result->object_id,
@@ -1663,7 +1664,6 @@ function api_checkupdate($request){
         if(is_object($term)){
           $thumb_id = get_woocommerce_term_meta( $term->term_id, 'thumbnail_id', true );
           $featured_img_url = wp_get_attachment_url(  $thumb_id );
-          $arr = [];
           $cat_arr = [
             'id' => $term->term_id,
             'parent' => $term->parent,

@@ -1663,6 +1663,7 @@ function api_checkupdate($request){
         if(is_object($term)){
           $thumb_id = get_woocommerce_term_meta( $term->term_id, 'thumbnail_id', true );
           $featured_img_url = wp_get_attachment_url(  $thumb_id );
+          $arr = [];
           $cat_arr = [
             'id' => $term->term_id,
             'parent' => $term->parent,

@@ -287,7 +287,8 @@ function api_getwishlist(WP_REST_Request $request)
   foreach ($results as $result) {
     $product = wc_get_product($result->prod_id);
     if (is_object($product)) {
-      $featured_img_url = get_the_post_thumbnail_url($product->get_image_id());
+      //$featured_img_url = get_the_post_thumbnail_url($product->get_image_id());
+      $featured_img_url = get_the_post_thumbnail_url($product->get_id());
       $arr = [
         'id' => $product->get_id(),
         'name' => $product->get_title(),
@@ -319,7 +320,8 @@ function api_getwishlist_2($userID)
   foreach ($results as $result) {
     $product = wc_get_product($result->prod_id);
     if (is_object($product)) {
-      $featured_img_url = get_the_post_thumbnail_url($product->get_image_id());
+      //$featured_img_url = get_the_post_thumbnail_url($product->get_image_id());
+      $featured_img_url = get_the_post_thumbnail_url($product->get_id());
       $arr = [
         'id' => $product->get_id(),
         'name' => $product->get_title(),
@@ -1646,7 +1648,8 @@ function api_checkupdate($request){
         if(is_object($product)){
           $product_cats_ids = wc_get_product_term_ids( $product->get_id(), 'product_cat' );
           $cat = implode(',', $product_cats_ids);
-          $featured_img_url = get_the_post_thumbnail_url($product->get_image_id());
+          //$featured_img_url = get_the_post_thumbnail_url($product->get_image_id());
+          $featured_img_url = get_the_post_thumbnail_url($product->get_id());
           $status = $product->get_status();
           if($status == 'publish'){
             $arr = [

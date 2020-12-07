@@ -1644,6 +1644,8 @@ function api_checkupdate($request){
       if($result->type == 'product'){
         $product   = wc_get_product( $result->object_id );
         if(is_object($product)){
+          $product_cats_ids = wc_get_product_term_ids( $product->get_id(), 'product_cat' );
+          $cat = implode(',', $product_cats_ids);
           $featured_img_url = get_the_post_thumbnail_url($product->get_image_id());
           $status = $product->get_status();
           if($status == 'publish'){
@@ -1654,6 +1656,7 @@ function api_checkupdate($request){
               'status' => $product->get_status(),
               'sku' => $product->get_sku(),
               'src' => $featured_img_url ? $featured_img_url : '',
+              'cat' => $cat,
               'updated_time' => $result->date_time
             ];
           }

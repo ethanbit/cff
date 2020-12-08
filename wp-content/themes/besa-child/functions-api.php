@@ -1659,7 +1659,7 @@ function api_checkupdate($request){
               'status' => $product->get_status(),
               'sku' => $product->get_sku(),
               'src' => $featured_img_url ? $featured_img_url : '',
-              'cat' => $cat,
+              'categories' => $cat,
               'updated_time' => $result->date_time
             ];
           }

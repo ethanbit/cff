@@ -232,7 +232,7 @@ function api_register(WP_REST_Request $request)
   $error = 0;
   $msg = '';
 
-  $user_id = wp_insert_user([
+  $user = wp_insert_user([
     'user_login' => $request['username'],
     'user_pass' => $request['password'],
     'user_email' => $request['email'],
@@ -241,11 +241,29 @@ function api_register(WP_REST_Request $request)
     'display_name' => $request['name'],
   ]);
 
-  if (!is_wp_error($user_id)) {
+  if (!is_wp_error($user)) {
     $msg = 'Register success.';
   } else {
     $error = 1;
-    $msg = 'Registration unsuccessful. Please try again.';
+    //$msg = '';
+    foreach($user->errors as $k => $e){
+      if(is_array($e)){
+        foreach($e as $ek => $ee){
+          if($msg == ''){
+            $msg = $ee;
+          }else{
+            $msg .= '. '.$ee;
+          }
+        }
+      }else{
+        if($msg == ''){
+          $msg = $e;
+        }else{
+          $msg .= '. '.$e;
+        }
+      }
+    }
+    //$msg = 'Registration unsuccessful. Please try again.';
   }
 
   echo json_encode(['error' => $error, 'msg' => $msg]);

@@ -232,6 +232,7 @@ function api_register(WP_REST_Request $request)
   $error = 0;
   $msg = '';
   $company = $request['company'];
+  $phone = $request['phone'];
 
   $user = wp_insert_user([
     'user_login' => $request['username'],
@@ -246,6 +247,7 @@ function api_register(WP_REST_Request $request)
     $msg = 'Register success.';
     $userId = $user;
     update_user_meta($userId, 'billing_company', $company);
+    update_user_meta($userId, 'billing_phone', $phone);
   } else {
     $error = 1;
     //$msg = '';

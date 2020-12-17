@@ -248,6 +248,8 @@ function api_register(WP_REST_Request $request)
     $userId = $user;
     update_user_meta($userId, 'billing_company', $company);
     update_user_meta($userId, 'billing_phone', $phone);
+    update_user_meta($userId, 'billing_first_name', $request['first_name']);
+    update_user_meta($userId, 'billing_last_name', $request['last_name']);
   } else {
     $error = 1;
     //$msg = '';

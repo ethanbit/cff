@@ -1171,7 +1171,7 @@ function api_addbillingaddress()
 
   wp_send_json(
     [
-      'msg' => 'Added Billing Address.',
+      'msg' => 'You have successfully entered a Shipping Address.',
       'err' => 0,
       'data' => '',
     ],
